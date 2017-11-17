@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.fengxingshifang.dirtychineseandroid.LaunchActivity">
+
+    <ImageView
+        android:id="@+id/launch_icon"
+        android:layout_width="48dip"
+        android:layout_height="48dip"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="80dip"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/fengxingshifang_icon" />
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:textColor="@android:color/black"
+    android:layout_alignParentBottom="true"
+    android:layout_marginBottom="60dip"
+    android:textSize="12sp"
+    android:text="世界即我"
+    />
+
+</RelativeLayout>
