@@ -62,5 +62,30 @@ public class MainActivity extends SlidingFragmentActivity {
         // fm.findFragmentByTag(TAG_LEFT_MENU);//根据标记找到对应的fragment
     }
 
+//    // 获取侧边栏fragment对象
+//    public LeftMenuFragment getLeftMenuFragment() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        LeftMenuFragment fragment = (LeftMenuFragment) fm
+//                .findFragmentByTag(TAG_LEFT_MENU);// 根据标记找到对应的fragment
+//        return fragment;
+//    }
+//
+//    // 获取主页fragment对象
+//    public ContentFragment getContentFragment() {
+//        FragmentManager fm = getSupportFragmentManager();
+//        ContentFragment fragment = (ContentFragment) fm
+//                .findFragmentByTag(TAG_CONTENT);// 根据标记找到对应的fragment
+//        return fragment;
+//    }
+
+//    public void onResume() {
+//        super.onResume();
+//        MobclickAgent.onResume(this);
+//    }
+//
+//    public void onPause() {
+//        super.onPause();
+//        MobclickAgent.onPause(this);
+//    }
 
 }

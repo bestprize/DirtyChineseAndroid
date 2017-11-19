@@ -2,13 +2,41 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000"
     android:orientation="vertical" >
 
-    <ListView
-        android:id="@+id/lv_list"
+    <com.fengxingshifang.dirtychineseandroid.view.NoScrollViewPager
+        android:id="@+id/vp_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <RadioGroup
+        android:id="@+id/rg_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="80dp" />
+        android:background="@drawable/bottom_tab_bg"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_home"
+            style="@style/Bottom_Tab_Style"
+            android:drawableTop="@drawable/tab_home_selector"
+            android:checked="true"
+            android:text="列表" />
+
+        <RadioButton
+            android:id="@+id/rb_publish"
+            style="@style/Bottom_Tab_Style"
+            android:drawableTop="@drawable/tab_publish_selector"
+            android:text="发表" />
+
+        <RadioButton
+            android:id="@+id/rb_mycontent"
+            style="@style/Bottom_Tab_Style"
+            android:drawableTop="@drawable/tab_mycontent_selector"
+            android:text="我的" />
+
+    </RadioGroup>
 
 </LinearLayout>
