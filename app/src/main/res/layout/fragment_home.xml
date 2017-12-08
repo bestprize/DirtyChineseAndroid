@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/grey_100"
+    android:paddingTop="@dimen/activity_margin_5"
+    android:paddingBottom="@dimen/activity_margin_5"
+    android:paddingLeft="@dimen/activity_margin_10"
+    android:paddingRight="@dimen/activity_margin_10">
+
+    <com.jcodecraeer.xrecyclerview.XRecyclerView
+        android:id="@+id/rv_list_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</RelativeLayout>

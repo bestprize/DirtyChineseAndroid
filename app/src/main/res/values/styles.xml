@@ -4,7 +4,10 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -14,19 +17,51 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
     <style name="Bottom_Tab_Style">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@android:color/transparent</item>
+    <item name="android:button">@null</item>
+    <item name="android:drawablePadding">0dp</item>
+    <item name="android:padding">0dp</item>
+    <item name="android:layout_weight">1</item>
+    <!--<item name="android:textColor">@color/txt_tab_selector</item>-->
+    <item name="android:gravity">center</item>
+    <item name="android:textSize">0sp</item>
+</style>
+
+    <style name="Bottom_Tab_Style_add">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:button">@null</item>
-        <item name="android:drawablePadding">3dp</item>
-        <item name="android:padding">5dp</item>
+        <item name="android:drawablePadding">0dp</item>
+        <item name="android:padding">7dp</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:textColor">@color/txt_tab_selector</item>
+        <!--<item name="android:textColor">@color/txt_tab_selector</item>-->
         <item name="android:gravity">center</item>
+        <item name="android:textSize">0sp</item>
     </style>
 
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="PhotoTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="actionBarTheme">@style/actionBarTheme</item>
+        <!--设置图片选择界面标题栏以及底栏颜色-->
+        <item name="colorPrimary">#38393E</item>
+        <!--设置图片选择界面状态栏颜色-->
+        <item name="colorPrimaryDark">#2F3034</item>
+        <item name="actionBarSize">56dip</item>
+    </style>
+    <style name="actionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:textColorPrimary">#fff</item>
+        <item name="actionBarSize">56dip</item>
+    </style>
 </resources>

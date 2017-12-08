@@ -1,5 +1,6 @@
 package com.fengxingshifang.dirtychineseandroid.domain;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,17 +9,17 @@ import java.util.List;
 
 public class InfoListData {
 
-    private List<InfosBean> infos;
+    private List<Info> infos;
 
-    public List<InfosBean> getInfos() {
+    public List<Info> getInfos() {
         return infos;
     }
 
-    public void setInfos(List<InfosBean> infos) {
+    public void setInfos(List<Info> infos) {
         this.infos = infos;
     }
 
-    public static class InfosBean {
+    public static class Info implements Serializable {
         /**
          * infoid : 0
          * infoorcomm : 1

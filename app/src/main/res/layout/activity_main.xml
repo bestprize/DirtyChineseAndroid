@@ -1,7 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fl_main"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
 
-</FrameLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+
+    <!--标题栏-->
+    <include
+        android:id="@+id/title_bar_home"
+        android:visibility="visible"
+        layout="@layout/title_bar_home" />
+    <include
+        android:id="@+id/title_bar_my"
+        android:visibility="gone"
+        layout="@layout/title_bar_my" />
+
+    <!--FrameLayout-->
+
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+
+    <RadioGroup
+        android:id="@+id/rg_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:background="#dedede"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/rb_home"
+            style="@style/Bottom_Tab_Style"
+            android:drawableTop="@drawable/tab_home_selector"
+            android:checked="true"
+            android:text="aaa" />
+
+        <Button
+            android:id="@+id/rb_publish"
+            style="@style/Bottom_Tab_Style_add"
+            android:drawableTop="@drawable/tab_publish_selector"
+            android:text="@null" />
+
+        <RadioButton
+            android:id="@+id/rb_my"
+            style="@style/Bottom_Tab_Style"
+            android:drawableTop="@drawable/tab_mycontent_selector"
+            android:text="@null" />
+
+    </RadioGroup>
+
+</LinearLayout>
+
+
