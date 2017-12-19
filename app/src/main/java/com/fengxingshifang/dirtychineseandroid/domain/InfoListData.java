@@ -21,44 +21,48 @@ public class InfoListData {
 
     public static class Info implements Serializable {
         /**
-         * infoid : 0
+         * infoid : 4
          * infoorcomm : 1
-         * title : title0
-         * digest : digest0
-         * content : digest0
-         * publisher : publisher0
-         * phoneidpublisher :
-         * createtime : 2017-11-13 15:52:11
-         * lastupdatetime : 2017-11-13 15:52:11
+         * title : title4
+         * digest : digest4
+         * content : digest4
+         * publisher : 15323858476
+         * phoneid :
+         * createtime : 2017-12-12 11:32:59
+         * lastupdatetime : 2017-12-12 11:32:59
+         * browsecount : 17
+         * commentcount : 0
+         * supportcount : 0
+         * commentlevel : qrqrq
+         * isup : qewq
          * infostatus : 01
-         * browsecount : 0
-         * commcount : 0
-         * remember_token : null
-         * created_at : 2017-11-13 07:52:11
-         * updated_at : 2017-11-13 07:52:11
+         * created_at : 2017-12-12 03:32:59
+         * updated_at : 2017-12-12 03:32:59
          */
 
-        private int infoid;
+        private String infoid;
         private String infoorcomm;
         private String title;
         private String digest;
         private String content;
         private String publisher;
-        private String phoneidpublisher;
+        private String phoneid;
         private String createtime;
         private String lastupdatetime;
-        private String infostatus;
         private int browsecount;
-        private int commcount;
-        private Object remember_token;
+        private int commentcount;
+        private int supportcount;
+        private String commentlevel;
+        private String isup;
+        private String infostatus;
         private String created_at;
         private String updated_at;
 
-        public int getInfoid() {
+        public String getInfoid() {
             return infoid;
         }
 
-        public void setInfoid(int infoid) {
+        public void setInfoid(String infoid) {
             this.infoid = infoid;
         }
 
@@ -102,12 +106,12 @@ public class InfoListData {
             this.publisher = publisher;
         }
 
-        public String getPhoneidpublisher() {
-            return phoneidpublisher;
+        public String getPhoneid() {
+            return phoneid;
         }
 
-        public void setPhoneidpublisher(String phoneidpublisher) {
-            this.phoneidpublisher = phoneidpublisher;
+        public void setPhoneid(String phoneid) {
+            this.phoneid = phoneid;
         }
 
         public String getCreatetime() {
@@ -126,14 +130,6 @@ public class InfoListData {
             this.lastupdatetime = lastupdatetime;
         }
 
-        public String getInfostatus() {
-            return infostatus;
-        }
-
-        public void setInfostatus(String infostatus) {
-            this.infostatus = infostatus;
-        }
-
         public int getBrowsecount() {
             return browsecount;
         }
@@ -142,20 +138,44 @@ public class InfoListData {
             this.browsecount = browsecount;
         }
 
-        public int getCommcount() {
-            return commcount;
+        public int getCommentcount() {
+            return commentcount;
         }
 
-        public void setCommcount(int commcount) {
-            this.commcount = commcount;
+        public void setCommentcount(int commentcount) {
+            this.commentcount = commentcount;
         }
 
-        public Object getRemember_token() {
-            return remember_token;
+        public int getSupportcount() {
+            return supportcount;
         }
 
-        public void setRemember_token(Object remember_token) {
-            this.remember_token = remember_token;
+        public void setSupportcount(int supportcount) {
+            this.supportcount = supportcount;
+        }
+
+        public String getCommentlevel() {
+            return commentlevel;
+        }
+
+        public void setCommentlevel(String commentlevel) {
+            this.commentlevel = commentlevel;
+        }
+
+        public String getIsup() {
+            return isup;
+        }
+
+        public void setIsup(String isup) {
+            this.isup = isup;
+        }
+
+        public String getInfostatus() {
+            return infostatus;
+        }
+
+        public void setInfostatus(String infostatus) {
+            this.infostatus = infostatus;
         }
 
         public String getCreated_at() {
@@ -173,5 +193,6 @@ public class InfoListData {
         public void setUpdated_at(String updated_at) {
             this.updated_at = updated_at;
         }
+
     }
 }

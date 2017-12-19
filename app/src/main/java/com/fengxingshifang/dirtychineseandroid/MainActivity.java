@@ -156,6 +156,8 @@ public class MainActivity  extends FragmentActivity {
         mBaseFragment = new ArrayList<>();
         mBaseFragment.add(new HomeFragment());//home Fragment
         mBaseFragment.add(new MyFragment());//my Fragment
+        BaseFragment homeFragment = getFragment();
+        switchFrament(mContent,homeFragment);
     }
 
     private void initView() {

@@ -43,7 +43,7 @@ public class InfoDao {
             while (cursor.moveToNext()) {
                 //循环获得展品信息
                 Info = new Info();
-                Info.setInfoid(cursor.getInt(cursor.getColumnIndex("infoid")));
+                Info.setInfoid(cursor.getString(cursor.getColumnIndex("infoid")));
                 Info.setTitle(cursor.getString(cursor.getColumnIndex("title")));
                 Info.setContent(cursor.getString(cursor.getColumnIndex("content")));
                 Info.setCreatetime(cursor.getString(cursor.getColumnIndex("createtime")));

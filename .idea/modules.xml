@@ -4,8 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DirtyChineseAndroid.iml" filepath="$PROJECT_DIR$/DirtyChineseAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app-xrichtext/app-xrichtext.iml" filepath="$PROJECT_DIR$/app-xrichtext/app-xrichtext.iml" />
       <module fileurl="file://$PROJECT_DIR$/slidingmenu/library/library.iml" filepath="$PROJECT_DIR$/slidingmenu/library/library.iml" />
       <module fileurl="file://$PROJECT_DIR$/slidingmenu/slidingmenu.iml" filepath="$PROJECT_DIR$/slidingmenu/slidingmenu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xrichtext/xrichtext.iml" filepath="$PROJECT_DIR$/xrichtext/xrichtext.iml" />
       <module fileurl="file://$PROJECT_DIR$/xutils/xutils.iml" filepath="$PROJECT_DIR$/xutils/xutils.iml" />
     </modules>
   </component>

@@ -9,8 +9,10 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/app-xrichtext" />
             <option value="$PROJECT_DIR$/slidingmenu" />
             <option value="$PROJECT_DIR$/slidingmenu/library" />
+            <option value="$PROJECT_DIR$/xrichtext" />
             <option value="$PROJECT_DIR$/xutils" />
           </set>
         </option>

@@ -52,7 +52,7 @@ public class PublishcommentActivity extends AppCompatActivity {
     private InfoDao infoDao;
     private InfoListData.Info fatherinfo;
     private InfoListData.Info info;
-    private long fatherInfoid;
+    private String fatherInfoid;
 
 
 

@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "D:\\DirtyChineseAndroid\\slidingmenu\\library\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
+        "outputFile": "D:\\ws_android\\DirtyChineseAndroid\\slidingmenu\\library\\build\\intermediates\\incremental\\mergeDebugAndroidTestResources\\merged.dir\\values\\values.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 1130
                 },
                 "from": {
-                    "file": "D:\\DirtyChineseAndroid\\slidingmenu\\library\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
+                    "file": "D:\\ws_android\\DirtyChineseAndroid\\slidingmenu\\library\\build\\intermediates\\bundles\\debug\\res\\values\\values.xml",
                     "position": {
                         "startLine": 14,
                         "startColumn": 4,
