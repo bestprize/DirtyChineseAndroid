@@ -20,6 +20,7 @@ import com.fengxingshifang.dirtychineseandroid.adapter.MyInfoListAdapter;
 import com.fengxingshifang.dirtychineseandroid.db.InfoDao;
 import com.fengxingshifang.dirtychineseandroid.domain.InfoListData;
 import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
+import com.fengxingshifang.dirtychineseandroid.utils.RefreshTokenUtils;
 import com.fengxingshifang.dirtychineseandroid.utils.SDCardUtil;
 import com.fengxingshifang.dirtychineseandroid.utils.SpacesItemDecoration;
 import com.fengxingshifang.dirtychineseandroid.utils.StringUtils;
@@ -172,8 +173,6 @@ public class InfoActivity extends AppCompatActivity {
         });
 
 
-
-
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("data");
         info = (InfoListData.Info) bundle.getSerializable("info");
@@ -206,7 +205,9 @@ public class InfoActivity extends AppCompatActivity {
     private void getInfoDataFromServer() {
         mUrlInfo = GlobalConstants.INFO_VIEW_URL;
         mUrlInfo = mUrlInfo + myInfoid + "/" + "1" + "/" + "c2487210deeb11e799aadf3977c20922/\"\"";
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzNjc1NDYzLCJleHAiOjE1MTM2NzkwNjMsIm5iZiI6MTUxMzY3NTQ2MywianRpIjoiTjdZek8zRXpsYng3eHZLQiIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z0Bcd9oP9rV4Gjng4OgrPKEpgeGKownihfBLVfLrQio";
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzODI0OTc1LCJleHAiOjE1MTM4Mjg1NzUsIm5iZiI6MTUxMzgyNDk3NSwianRpIjoic3QxVU1UanhBYjU2YzlXayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MZsVbswTc_sAwoKfc6FacMhd3HPAltSzwD0YttvwfU8";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(this);
         mUrlInfo = mUrlInfo + "?token=" + token;
         RequestParams params = new RequestParams(mUrlInfo);
         params.addQueryStringParameter("wd","xUtils");
@@ -256,7 +257,9 @@ public class InfoActivity extends AppCompatActivity {
     private void getCommentDataFromServer() {
         mUrlListComment = GlobalConstants.COMMENT_LIST_URL;
         mUrlListComment = mUrlListComment + myInfoid;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzNjc1NDYzLCJleHAiOjE1MTM2NzkwNjMsIm5iZiI6MTUxMzY3NTQ2MywianRpIjoiTjdZek8zRXpsYng3eHZLQiIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z0Bcd9oP9rV4Gjng4OgrPKEpgeGKownihfBLVfLrQio";
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzODI0OTc1LCJleHAiOjE1MTM4Mjg1NzUsIm5iZiI6MTUxMzgyNDk3NSwianRpIjoic3QxVU1UanhBYjU2YzlXayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MZsVbswTc_sAwoKfc6FacMhd3HPAltSzwD0YttvwfU8";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(this);
         mUrlListComment = mUrlListComment + "?token=" + token;
         RequestParams params = new RequestParams(mUrlListComment);
         params.addQueryStringParameter("wd","xUtils");

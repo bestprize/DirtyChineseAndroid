@@ -135,6 +135,11 @@ public class PublishActivity extends AppCompatActivity {
             case R.id.action_new_save:
                 saveNoteData(false);
                 break;
+            case R.id.action_new_submit:
+                saveNoteData(false);
+//                submitNoteData(false);
+//                deleteNoteData(false);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }

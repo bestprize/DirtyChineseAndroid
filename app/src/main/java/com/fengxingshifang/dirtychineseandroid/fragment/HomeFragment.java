@@ -18,6 +18,7 @@ import com.fengxingshifang.dirtychineseandroid.db.InfoDao;
 import com.fengxingshifang.dirtychineseandroid.domain.InfoListData;
 import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
 import com.fengxingshifang.dirtychineseandroid.utils.CacheUtils;
+import com.fengxingshifang.dirtychineseandroid.utils.RefreshTokenUtils;
 import com.fengxingshifang.dirtychineseandroid.utils.SpacesItemDecoration;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -109,7 +110,9 @@ public class HomeFragment extends BaseFragment {
     private void getDataFromServer() {
         mUrl = GlobalConstants.HOME_LIST_URL;
         mUrl = mUrl + "01/" + String.valueOf(nowPage) + "/" + GlobalConstants.numberPerPage;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzNjc1NDYzLCJleHAiOjE1MTM2NzkwNjMsIm5iZiI6MTUxMzY3NTQ2MywianRpIjoiTjdZek8zRXpsYng3eHZLQiIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z0Bcd9oP9rV4Gjng4OgrPKEpgeGKownihfBLVfLrQio";
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzODI0OTc1LCJleHAiOjE1MTM4Mjg1NzUsIm5iZiI6MTUxMzgyNDk3NSwianRpIjoic3QxVU1UanhBYjU2YzlXayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MZsVbswTc_sAwoKfc6FacMhd3HPAltSzwD0YttvwfU8";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(mContext);
         mUrl = mUrl + "?token=" + token;
         RequestParams params = new RequestParams(mUrl);
         params.addQueryStringParameter("wd","xUtils");

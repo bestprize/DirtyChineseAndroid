@@ -13,6 +13,12 @@
     <item
         android:id="@+id/action_new_save"
         android:orderInCategory="100"
-        android:title="保存"
+        android:title="暂存"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_new_submit"
+        android:orderInCategory="100"
+        android:title="提交"
         app:showAsAction="always" />
 </menu>

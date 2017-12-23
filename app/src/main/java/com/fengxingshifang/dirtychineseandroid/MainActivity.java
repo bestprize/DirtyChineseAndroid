@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RadioGroup;
@@ -13,6 +14,7 @@ import android.widget.RadioGroup;
 import com.fengxingshifang.dirtychineseandroid.fragment.BaseFragment;
 import com.fengxingshifang.dirtychineseandroid.fragment.HomeFragment;
 import com.fengxingshifang.dirtychineseandroid.fragment.MyFragment;
+import com.fengxingshifang.dirtychineseandroid.utils.PrefUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -153,6 +155,8 @@ public class MainActivity  extends FragmentActivity {
     }
 
     private void initFragment() {
+        //临时数据
+//        PrefUtils.setString(this, "token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MDE0NzIwLCJleHAiOjE1MTQwMTgzMjAsIm5iZiI6MTUxNDAxNDcyMCwianRpIjoiQ2RqQk1lRDZFQjQ4bXA5WCIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.bs14pvFzsNLCEayWUyYQkzaCer_OUYnwkRu6GN00xUg");
         mBaseFragment = new ArrayList<>();
         mBaseFragment.add(new HomeFragment());//home Fragment
         mBaseFragment.add(new MyFragment());//my Fragment
