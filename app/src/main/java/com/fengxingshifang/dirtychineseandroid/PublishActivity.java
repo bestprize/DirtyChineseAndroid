@@ -21,17 +21,22 @@ import android.widget.Toast;
 
 import com.fengxingshifang.dirtychineseandroid.db.InfoDao;
 import com.fengxingshifang.dirtychineseandroid.domain.InfoListData.Info;
+import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
 import com.fengxingshifang.dirtychineseandroid.utils.CommonUtil;
 import com.fengxingshifang.dirtychineseandroid.utils.ImageUtils;
+import com.fengxingshifang.dirtychineseandroid.utils.RefreshTokenUtils;
 import com.fengxingshifang.dirtychineseandroid.utils.SDCardUtil;
 import com.fengxingshifang.dirtychineseandroid.utils.ScreenUtils;
 import com.sendtion.xrichtext.RichTextEditor;
 
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
 import org.xutils.view.annotation.ViewInject;
 import org.xutils.x;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import me.iwf.photopicker.PhotoPicker;
 import rx.Observable;
@@ -57,6 +62,9 @@ public class PublishActivity extends AppCompatActivity {
     private Subscription subsLoading;
     private Subscription subsInsert;
     private InfoDao infoDao;
+    private String infoId;
+    private String mUrl;
+    private String token;
 
 
 
@@ -102,6 +110,8 @@ public class PublishActivity extends AppCompatActivity {
         info = new Info();
         infoDao = new InfoDao(this);
 
+        infoId = UUID.randomUUID().toString().replace("-","");
+
 
     }
 
@@ -137,7 +147,7 @@ public class PublishActivity extends AppCompatActivity {
                 break;
             case R.id.action_new_submit:
                 saveNoteData(false);
-//                submitNoteData(false);
+                submitNoteData(false);
 //                deleteNoteData(false);
                 break;
         }
@@ -159,6 +169,7 @@ public class PublishActivity extends AppCompatActivity {
                     title = content;
                 }
             }
+            info.setInfoid(infoId);
             info.setTitle(title);
             info.setContent(content);
             flag = 0;
@@ -296,6 +307,95 @@ public class PublishActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    //提交至服务器
+    private void submitNoteData(boolean isBackground) {
+
+
+        String title = et_new_title.getText().toString();
+        Log.i("","title---------------------------------------------------:"+title);
+        String content = getEditDataForSubmit();
+
+        info.setInfoid(infoId);
+        info.setTitle(title);
+        info.setContent(content);
+        flag = 0;
+
+        //-TODO
+        //插入服务器数据库
+        postDataToServer();
+
+
+
+
+    }
+
+    /**
+     * 负责处理编辑数据提交等事宜，请自行实现
+     */
+    private String getEditDataForSubmit() {
+        List<RichTextEditor.EditData> editList = et_new_content.buildEditData();
+        StringBuffer content = new StringBuffer();
+        for (RichTextEditor.EditData itemData : editList) {
+            if (itemData.inputStr != null) {
+                content.append(itemData.inputStr);
+                //Log.d("RichEditor", "commit inputStr=" + itemData.inputStr);
+            } else if (itemData.imagePath != null) {
+                //得到图片文件名
+                String imageName = "";
+                String[] imagePathSplit = itemData.imagePath.split("/");
+                for(String imageNameTmp:imagePathSplit){
+                    imageName = imageNameTmp;
+                }
+                content.append("<img src=\"").append("/").append(infoId).append("/").append(imageName).append("\"/>");
+                //Log.d("RichEditor", "commit imgePath=" + itemData.imagePath);
+                //imageList.add(itemData.imagePath);
+            }
+        }
+        return content.toString();
+    }
+
+
+
+    private void postDataToServer() {
+        mUrl = GlobalConstants.INFO_NEW_URL;
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzODI0OTc1LCJleHAiOjE1MTM4Mjg1NzUsIm5iZiI6MTUxMzgyNDk3NSwianRpIjoic3QxVU1UanhBYjU2YzlXayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MZsVbswTc_sAwoKfc6FacMhd3HPAltSzwD0YttvwfU8";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(this);
+        mUrl = mUrl + "?token=" + token;
+        RequestParams params = new RequestParams(mUrl);
+        params.addQueryStringParameter("wd","xUtils");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+//                processData(result, false);
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
+    }
+
+
+
+
 
     @Override
     protected void onStop() {

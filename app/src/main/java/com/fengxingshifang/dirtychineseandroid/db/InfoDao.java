@@ -45,6 +45,7 @@ public class InfoDao {
                 Info = new Info();
                 Info.setInfoid(cursor.getString(cursor.getColumnIndex("infoid")));
                 Info.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+                Info.setDigest(cursor.getString(cursor.getColumnIndex("digest")));
                 Info.setContent(cursor.getString(cursor.getColumnIndex("content")));
                 Info.setCreatetime(cursor.getString(cursor.getColumnIndex("createtime")));
                 Info.setLastupdatetime(cursor.getString(cursor.getColumnIndex("lastupdatetime")));
@@ -64,23 +65,59 @@ public class InfoDao {
     }
 
     /**
+     * 查询笔记
+     */
+    public Info queryInfo(Info Info) {
+        SQLiteDatabase db = helper.getWritableDatabase();
+
+        String sql ;
+        Cursor cursor = null;
+        try {
+            sql = "select * from db_info where infoid = " + Info.getInfoid();
+            cursor = db.rawQuery(sql, null);
+            //cursor = db.query("Info", null, null, null, null, null, "n_id desc");
+            while (cursor.moveToNext()) {
+                Info = new Info();
+                Info.setInfoid(cursor.getString(cursor.getColumnIndex("infoid")));
+                Info.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+                Info.setDigest(cursor.getString(cursor.getColumnIndex("digest")));
+                Info.setContent(cursor.getString(cursor.getColumnIndex("content")));
+                Info.setCreatetime(cursor.getString(cursor.getColumnIndex("createtime")));
+                Info.setLastupdatetime(cursor.getString(cursor.getColumnIndex("lastupdatetime")));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null) {
+                db.close();
+            }
+        }
+        return Info;
+    }
+
+
+    /**
      * 插入笔记
      */
     public long insertInfo(Info Info) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        String sql = "insert into db_Info(title,content," +
+        String sql = "insert into db_Info(infoid,title,content," +
                 "createtime,lastupdatetime) " +
-                "values(?,?,?,?)";
+                "values(?,?,?,?,?)";
 
         long ret = 0;
         //sql = "insert into ex_user(eu_login_name,eu_create_time,eu_update_time) values(?,?,?)";
         SQLiteStatement stat = db.compileStatement(sql);
         db.beginTransaction();
         try {
-            stat.bindString(1, Info.getTitle());
-            stat.bindString(2, Info.getContent());
-            stat.bindString(3, DateUtils.date2string(new Date()));
+            stat.bindString(1, Info.getInfoid());
+            stat.bindString(2, Info.getTitle());
+            stat.bindString(3, Info.getContent());
             stat.bindString(4, DateUtils.date2string(new Date()));
+            stat.bindString(5, DateUtils.date2string(new Date()));
             ret = stat.executeInsert();
             db.setTransactionSuccessful();
         } catch (SQLException e) {

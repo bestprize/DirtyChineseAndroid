@@ -24,7 +24,7 @@ public class MyOpenHelper  extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         //创建info表
         db.execSQL("create table db_info(" +
-                        "infoid integer primary key autoincrement," +
+                        "infoid varchar primary key," +
                 "infoorcomm varchar, " +
                 "title varchar, " +
                 "digest varchar, " +
