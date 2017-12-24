@@ -110,9 +110,9 @@ public class HomeFragment extends BaseFragment {
     private void getDataFromServer() {
         mUrl = GlobalConstants.HOME_LIST_URL;
         mUrl = mUrl + "01/" + String.valueOf(nowPage) + "/" + GlobalConstants.numberPerPage;
-//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzODI0OTc1LCJleHAiOjE1MTM4Mjg1NzUsIm5iZiI6MTUxMzgyNDk3NSwianRpIjoic3QxVU1UanhBYjU2YzlXayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MZsVbswTc_sAwoKfc6FacMhd3HPAltSzwD0YttvwfU8";
-        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
-        token = refreshTokenUtils.refreshToken(mContext);
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTE5NDA1LCJleHAiOjE1MTQxMjMwMDUsIm5iZiI6MTUxNDExOTQwNSwianRpIjoiN1RDc0ZHQWVabEZjcnVUbyIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.qUkKwfYaPUXKZkpw6kUxIvHTNQ5SjIsjjUeZauGZxsQ";
+//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+//        token = refreshTokenUtils.refreshToken(mContext);
         mUrl = mUrl + "?token=" + token;
         RequestParams params = new RequestParams(mUrl);
         params.addQueryStringParameter("wd","xUtils");

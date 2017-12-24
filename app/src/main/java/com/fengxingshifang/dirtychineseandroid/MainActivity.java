@@ -156,7 +156,7 @@ public class MainActivity  extends FragmentActivity {
 
     private void initFragment() {
         //临时数据
-//        PrefUtils.setString(this, "token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MDE0NzIwLCJleHAiOjE1MTQwMTgzMjAsIm5iZiI6MTUxNDAxNDcyMCwianRpIjoiQ2RqQk1lRDZFQjQ4bXA5WCIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.bs14pvFzsNLCEayWUyYQkzaCer_OUYnwkRu6GN00xUg");
+        PrefUtils.setString(this, "token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTE5Mjc4LCJleHAiOjE1MTQxMjI4NzgsIm5iZiI6MTUxNDExOTI3OCwianRpIjoid29rWVFNUFhBaXVWVHVndiIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.nQauPFNBKGYmgOwDHyEhKDRnKimPg7oSjXpBKjmeQrM");
         mBaseFragment = new ArrayList<>();
         mBaseFragment.add(new HomeFragment());//home Fragment
         mBaseFragment.add(new MyFragment());//my Fragment
