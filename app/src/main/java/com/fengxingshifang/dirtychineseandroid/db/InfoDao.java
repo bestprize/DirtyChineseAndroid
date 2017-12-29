@@ -47,6 +47,8 @@ public class InfoDao {
                 Info.setTitle(cursor.getString(cursor.getColumnIndex("title")));
                 Info.setDigest(cursor.getString(cursor.getColumnIndex("digest")));
                 Info.setContent(cursor.getString(cursor.getColumnIndex("content")));
+                Info.setFatherinfoid(cursor.getString(cursor.getColumnIndex("fatherinfoid")));
+                Info.setFathertitle(cursor.getString(cursor.getColumnIndex("fathertitle")));
                 Info.setCreatetime(cursor.getString(cursor.getColumnIndex("createtime")));
                 Info.setLastupdatetime(cursor.getString(cursor.getColumnIndex("lastupdatetime")));
                 InfoList.add(Info);
@@ -82,6 +84,8 @@ public class InfoDao {
                 Info.setTitle(cursor.getString(cursor.getColumnIndex("title")));
                 Info.setDigest(cursor.getString(cursor.getColumnIndex("digest")));
                 Info.setContent(cursor.getString(cursor.getColumnIndex("content")));
+                Info.setFatherinfoid(cursor.getString(cursor.getColumnIndex("fatherinfoid")));
+                Info.setFathertitle(cursor.getString(cursor.getColumnIndex("fathertitle")));
                 Info.setCreatetime(cursor.getString(cursor.getColumnIndex("createtime")));
                 Info.setLastupdatetime(cursor.getString(cursor.getColumnIndex("lastupdatetime")));
             }
@@ -104,9 +108,9 @@ public class InfoDao {
      */
     public long insertInfo(Info Info) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        String sql = "insert into db_Info(infoid,title,content," +
+        String sql = "insert into db_Info(infoid,title,content,fatherinfoid,fathertitle," +
                 "createtime,lastupdatetime) " +
-                "values(?,?,?,?,?)";
+                "values(?,?,?,?,?,?,?)";
 
         long ret = 0;
         //sql = "insert into ex_user(eu_login_name,eu_create_time,eu_update_time) values(?,?,?)";
@@ -116,8 +120,10 @@ public class InfoDao {
             stat.bindString(1, Info.getInfoid());
             stat.bindString(2, Info.getTitle());
             stat.bindString(3, Info.getContent());
-            stat.bindString(4, DateUtils.date2string(new Date()));
-            stat.bindString(5, DateUtils.date2string(new Date()));
+            stat.bindString(4, Info.getFatherinfoid());
+            stat.bindString(5, Info.getFathertitle());
+            stat.bindString(6, DateUtils.date2string(new Date()));
+            stat.bindString(7, DateUtils.date2string(new Date()));
             ret = stat.executeInsert();
             db.setTransactionSuccessful();
         } catch (SQLException e) {
@@ -148,7 +154,7 @@ public class InfoDao {
     /**
      * 删除笔记
      */
-    public int deleteInfo(int InfoId) {
+    public int deleteInfo(String InfoId) {
         SQLiteDatabase db = helper.getWritableDatabase();
         int ret = 0;
         try {

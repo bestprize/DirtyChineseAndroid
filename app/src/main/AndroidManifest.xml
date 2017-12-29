@@ -25,9 +25,11 @@
         </activity>
         <activity android:name=".WelcomeActivity"/>
         <activity android:name=".MainActivity"/>
-        <activity android:name=".PublishActivity"/>
+        <activity android:name=".PublishActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".InfoActivity"/>
-        <activity android:name=".PublishcommentActivity"/>
+        <activity android:name=".PublishcommentActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize" />
         <activity android:name=".LoginActivity"/>
         <activity android:name=".MycontentActivity"/>
         <activity android:name=".SettingActivity"/>

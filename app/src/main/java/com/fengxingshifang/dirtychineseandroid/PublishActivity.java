@@ -96,8 +96,9 @@ public class PublishActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                dealwithExit();
             }
         });
 
@@ -206,11 +207,13 @@ public class PublishActivity extends AppCompatActivity {
                 break;
             case R.id.action_new_save:
                 saveNoteData(false);
+                finish();
                 break;
             case R.id.action_new_submit:
                 saveNoteData(false);
                 submitNoteData(false);
-//                deleteNoteData(false);
+                deleteNoteData(false);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -427,7 +430,7 @@ public class PublishActivity extends AppCompatActivity {
 
     private void postDataToServer() {
         mUrl = GlobalConstants.INFO_NEW_URL;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTE5NDA1LCJleHAiOjE1MTQxMjMwMDUsIm5iZiI6MTUxNDExOTQwNSwianRpIjoiN1RDc0ZHQWVabEZjcnVUbyIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.qUkKwfYaPUXKZkpw6kUxIvHTNQ5SjIsjjUeZauGZxsQ";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
 //        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
 //        token = refreshTokenUtils.refreshToken(this);
         mUrl = mUrl + "?token=" + token;
@@ -475,7 +478,7 @@ public class PublishActivity extends AppCompatActivity {
         picUrl = GlobalConstants.PICS_UPLOAD_URL;
 //        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
 //        token = refreshTokenUtils.refreshToken(this);
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTE5NDA1LCJleHAiOjE1MTQxMjMwMDUsIm5iZiI6MTUxNDExOTQwNSwianRpIjoiN1RDc0ZHQWVabEZjcnVUbyIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.qUkKwfYaPUXKZkpw6kUxIvHTNQ5SjIsjjUeZauGZxsQ";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
         picUrl = picUrl + "?token=" + token;
         RequestParams params = new RequestParams(picUrl);
         List<KeyValue> list = new ArrayList<KeyValue>();
@@ -538,6 +541,13 @@ public class PublishActivity extends AppCompatActivity {
 
     }
 
+
+    private void deleteNoteData(boolean isBackground) {
+
+        infoDao.deleteInfo(info.getInfoid());
+
+
+    }
 
 
     @Override

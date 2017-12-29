@@ -31,6 +31,8 @@ public class MyOpenHelper  extends SQLiteOpenHelper {
                 "content varchar, " +
                 "publisher varchar, " +
                 "phoneidpublisher varchar, " +
+                "fatherinfoid varchar, " +
+                "fathertitle varchar, " +
                 "createtime datetime, " +
                 "lastupdatetime datetime " +
                 ")");

@@ -1,11 +1,16 @@
 package com.fengxingshifang.dirtychineseandroid;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -16,16 +21,28 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fengxingshifang.dirtychineseandroid.db.InfoDao;
+import com.fengxingshifang.dirtychineseandroid.domain.DUser;
 import com.fengxingshifang.dirtychineseandroid.domain.Info;
 import com.fengxingshifang.dirtychineseandroid.domain.InfoListData;
+import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
 import com.fengxingshifang.dirtychineseandroid.utils.CommonUtil;
 import com.fengxingshifang.dirtychineseandroid.utils.ImageUtils;
+import com.fengxingshifang.dirtychineseandroid.utils.PrefUtils;
 import com.fengxingshifang.dirtychineseandroid.utils.SDCardUtil;
 import com.fengxingshifang.dirtychineseandroid.utils.ScreenUtils;
+import com.google.gson.Gson;
 import com.sendtion.xrichtext.RichTextEditor;
 
+import org.xutils.common.Callback;
+import org.xutils.common.util.KeyValue;
+import org.xutils.http.RequestParams;
+import org.xutils.http.body.MultipartBody;
+import org.xutils.x;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import me.iwf.photopicker.PhotoPicker;
 import rx.Observable;
@@ -53,9 +70,20 @@ public class PublishcommentActivity extends AppCompatActivity {
     private InfoListData.Info fatherinfo;
     private InfoListData.Info info;
     private String fatherInfoid;
+    private String fatherTitle;
+    private String fatherPublisher;
+    private String infoId;
+    private String mUrl;
+    private String token;
+    private String jsonStringInfo;
+    private String picUrl;
+    private boolean isInfoAddOrComment;
+    private DUser userInfo;
 
-
-
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
 
 
@@ -71,8 +99,9 @@ public class PublishcommentActivity extends AppCompatActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                dealwithExit();
             }
         });
 
@@ -88,6 +117,8 @@ public class PublishcommentActivity extends AppCompatActivity {
         Bundle bundle = intent.getBundleExtra("data");
         fatherinfo = (InfoListData.Info) bundle.getSerializable("info");
         fatherInfoid = fatherinfo.getInfoid();
+        fatherTitle = fatherinfo.getTitle();
+        fatherPublisher = fatherinfo.getPublisher();
 
 //        et_comment_new_title = (EditText) findViewById(R.id.et_comment_new_title);
         et_comment_new_content = (RichTextEditor) findViewById(R.id.et_comment_new_content);
@@ -103,9 +134,64 @@ public class PublishcommentActivity extends AppCompatActivity {
         info = new InfoListData.Info();
         infoDao = new InfoDao(this);
 
+        infoId = UUID.randomUUID().toString().replace("-","");
+
+
+        verifyStoragePermissions(this);
+
+        getUserInfo(this);
+
 
     }
 
+
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to
+     * grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    //通过时
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    //拒绝是处理
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
 
 
@@ -135,6 +221,13 @@ public class PublishcommentActivity extends AppCompatActivity {
                 break;
             case R.id.action_new_save:
                 saveNoteData(false);
+                finish();
+                break;
+            case R.id.action_new_submit:
+                saveNoteData(false);
+                submitNoteData(false);
+                deleteNoteData(false);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -156,13 +249,15 @@ public class PublishcommentActivity extends AppCompatActivity {
 //            }
 //        }
 //        info.setTitle(title);
+        info.setFatherinfoid(fatherInfoid);
+        info.setFathertitle(fatherTitle);
         info.setContent(content);
 //        flag = 0;
 //        if (flag == 0 ) {//新建笔记
 //            if (title.length() == 0 && content.length() == 0) {
 //                Toast.makeText(this, "请输入内容", Toast.LENGTH_SHORT).show();
 //            } else {
-                long infoId = infoDao.insertInfo(info);
+                infoDao.insertInfo(info);
         //TODO
 //                    //Log.i("", "noteId: "+noteId);
 //                    //查询新建笔记id，防止重复插入
@@ -294,6 +389,193 @@ public class PublishcommentActivity extends AppCompatActivity {
                 });
     }
 
+
+    //提交至服务器
+    private void submitNoteData(boolean isBackground) {
+
+        //图片上传
+        postPicsToServer();
+
+
+
+
+
+//        String title = et_comment_new_title.getText().toString();
+//        Log.i("","title---------------------------------------------------:"+title);
+        String content = getEditDataForSubmit();
+
+        info.setInfoid(infoId);
+//        info.setTitle(title);
+        info.setContent(content);
+        flag = 0;
+
+        //-TODO
+        //插入服务器数据库
+        postDataToServer();
+
+
+
+
+    }
+
+    /**
+     * 负责处理编辑数据提交等事宜，请自行实现
+     */
+    private String getEditDataForSubmit() {
+        List<RichTextEditor.EditData> editList = et_comment_new_content.buildEditData();
+        StringBuffer content = new StringBuffer();
+        for (RichTextEditor.EditData itemData : editList) {
+            if (itemData.inputStr != null) {
+                content.append(itemData.inputStr);
+                //Log.d("RichEditor", "commit inputStr=" + itemData.inputStr);
+            } else if (itemData.imagePath != null) {
+                //得到图片文件名
+                String imageName = "";
+                String[] imagePathSplit = itemData.imagePath.split("/");
+                for(String imageNameTmp:imagePathSplit){
+                    imageName = imageNameTmp;
+                }
+                content.append("<img src=\"").append("/").append(infoId).append("/").append(imageName).append("\"/>");
+                //Log.d("RichEditor", "commit imgePath=" + itemData.imagePath);
+                //imageList.add(itemData.imagePath);
+            }
+        }
+        return content.toString();
+    }
+
+
+
+    private void postDataToServer() {
+        if(isInfoAddOrComment){
+            //add info
+            mUrl = GlobalConstants.INFO_ADD_URL;
+        }else{
+            //comment
+            mUrl = GlobalConstants.INFO_COMMENT_NEW_URL;
+        }
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+//        token = refreshTokenUtils.refreshToken(this);
+        mUrl = mUrl + "?token=" + token;
+        Gson gson=new Gson();
+        jsonStringInfo = gson.toJson(info);
+        Log.e("TAG1111----------------", jsonStringInfo);
+        RequestParams params = new RequestParams(mUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(jsonStringInfo);
+        params.addQueryStringParameter("wd","xUtils");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+//                processData(result, false);
+                Log.e("TAG", "xUtis3联网请求success==");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
+    }
+
+
+    /**
+     * 负责处理编辑数据提交等事宜，请自行实现
+     */
+    private void postPicsToServer() {
+        picUrl = GlobalConstants.PICS_UPLOAD_URL;
+//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+//        token = refreshTokenUtils.refreshToken(this);
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+        picUrl = picUrl + "?token=" + token;
+        RequestParams params = new RequestParams(picUrl);
+        List<KeyValue> list = new ArrayList<KeyValue>();
+        List<RichTextEditor.EditData> editList = et_comment_new_content.buildEditData();
+        StringBuffer content = new StringBuffer();
+        int keyValueInt = 0;
+        for (RichTextEditor.EditData itemData : editList) {
+            if (itemData.inputStr != null) {
+//                content.append(itemData.inputStr);
+                //Log.d("RichEditor", "commit inputStr=" + itemData.inputStr);
+            } else if (itemData.imagePath != null) {
+                //得到图片文件名
+                String imageName = "";
+                String[] imagePathSplit = itemData.imagePath.split("/");
+                for(String imageNameTmp:imagePathSplit){
+                    imageName = imageNameTmp;
+                }
+                File file = new File(itemData.imagePath);
+                list.add(new KeyValue("file" + String.valueOf(keyValueInt),file));
+                keyValueInt ++;
+//                content.append("<img src=\"").append("/").append(infoId).append("/").append(imageName).append("\"/>");
+                //Log.d("RichEditor", "commit imgePath=" + itemData.imagePath);
+                //imageList.add(itemData.imagePath);
+            }
+        }
+        list.add(new KeyValue("filenumber" , String.valueOf(keyValueInt)));
+        list.add(new KeyValue("infoid" , infoId));
+        MultipartBody body=new MultipartBody(list,"UTF-8");
+        params.setRequestBody(body);
+        params.setMultipart(true);
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+//                processData(result, false);
+                Log.e("TAG", "xUtis3联网请求success==");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
+
+
+
+    }
+
+
+    private void deleteNoteData(boolean isBackground) {
+
+        infoDao.deleteInfo(info.getInfoid());
+
+
+    }
+
+
+
+
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -334,5 +616,52 @@ public class PublishcommentActivity extends AppCompatActivity {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
     }
 
+
+    private void getUserInfo(Context ctx) {
+        //获取token
+        String token = PrefUtils.getString(ctx, "token", null);
+        String getUserUrl = GlobalConstants.GET_USER_URL;
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+        getUserUrl = getUserUrl + "?token=" + token;
+
+        Log.e("TAG1111----------------", jsonStringInfo);
+        RequestParams params = new RequestParams(getUserUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(jsonStringInfo);
+        params.addQueryStringParameter("wd","xUtils");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson=new Gson();
+                userInfo = gson.fromJson(result, DUser.class);
+                if(fatherPublisher.equals(userInfo.getUser().getUserid())){
+                    isInfoAddOrComment = true;
+                } else {
+                    isInfoAddOrComment = false;
+                }
+                Log.e("TAG", "xUtis3联网请求success==");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
+    }
 
 }

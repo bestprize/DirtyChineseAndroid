@@ -11,8 +11,12 @@ public class GlobalConstants {
     public static final String INFO_VIEW_URL = SERVER_URL + "infoview/";
     public static final String COMMENT_LIST_URL = SERVER_URL + "infoviewcommentlist/";
     public static final String INFO_NEW_URL = SERVER_URL + "infonew";
+    public static final String INFO_ADD_URL = SERVER_URL + "infoadd";
+    public static final String INFO_COMMENT_NEW_URL = SERVER_URL + "infocommentnew";
 
     public static final String PICS_UPLOAD_URL = SERVER_URL + "uploadpics";
+
+    public static final String GET_USER_URL = SERVER_URL + "user";
 
 
     public static final String numberPerPage = "10";
