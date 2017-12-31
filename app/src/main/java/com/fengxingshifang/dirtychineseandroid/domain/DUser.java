@@ -37,7 +37,7 @@ public class DUser {
          * updated_at : 2017-12-26 03:25:29
          */
 
-        private int userid;
+        private String userid;
         private String registerstyle;
         private String phone;
         private String thirdpartyid;
@@ -52,11 +52,11 @@ public class DUser {
         private String created_at;
         private String updated_at;
 
-        public int getUserid() {
+        public String getUserid() {
             return userid;
         }
 
-        public void setUserid(int userid) {
+        public void setUserid(String userid) {
             this.userid = userid;
         }
 

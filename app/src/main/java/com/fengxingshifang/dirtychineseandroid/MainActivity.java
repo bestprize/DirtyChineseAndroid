@@ -1,8 +1,12 @@
 package com.fengxingshifang.dirtychineseandroid;
 
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
@@ -31,6 +35,12 @@ public class MainActivity  extends FragmentActivity {
     private View title_bar_my;
     private Button rb_publish;
 
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE };
+
+
     /**
      * 选中的Fragment的对应的位置
      */
@@ -50,7 +60,56 @@ public class MainActivity  extends FragmentActivity {
         initFragment();
         //设置RadioGroup的监听
         setListener();
+        verifyStoragePermissions(this);
     }
+
+    /**
+     * Checks if the app has permission to write to device storage
+     *
+     * If the app does not has permission then the user will be prompted to
+     * grant permissions
+     *
+     * @param activity
+     */
+    public static void verifyStoragePermissions(Activity activity) {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(activity,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    //通过时
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    //拒绝是处理
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+
 
     private void setListener() {
         mRg_main.setOnCheckedChangeListener(new MyOnCheckedChangeListener());
@@ -156,7 +215,7 @@ public class MainActivity  extends FragmentActivity {
 
     private void initFragment() {
         //临时数据
-        PrefUtils.setString(this, "token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTE5Mjc4LCJleHAiOjE1MTQxMjI4NzgsIm5iZiI6MTUxNDExOTI3OCwianRpIjoid29rWVFNUFhBaXVWVHVndiIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.nQauPFNBKGYmgOwDHyEhKDRnKimPg7oSjXpBKjmeQrM");
+//        PrefUtils.setString(this, "token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTE5Mjc4LCJleHAiOjE1MTQxMjI4NzgsIm5iZiI6MTUxNDExOTI3OCwianRpIjoid29rWVFNUFhBaXVWVHVndiIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.nQauPFNBKGYmgOwDHyEhKDRnKimPg7oSjXpBKjmeQrM");
         mBaseFragment = new ArrayList<>();
         mBaseFragment.add(new HomeFragment());//home Fragment
         mBaseFragment.add(new MyFragment());//my Fragment

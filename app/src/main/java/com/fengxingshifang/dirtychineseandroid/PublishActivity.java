@@ -76,10 +76,6 @@ public class PublishActivity extends AppCompatActivity {
     private String jsonStringInfo;
     private String picUrl;
 
-    private static final int REQUEST_EXTERNAL_STORAGE = 1;
-    private static String[] PERMISSIONS_STORAGE = {
-            Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE };
 
 
 
@@ -127,57 +123,11 @@ public class PublishActivity extends AppCompatActivity {
         infoId = UUID.randomUUID().toString().replace("-","");
 
 
-        verifyStoragePermissions(this);
 
 
 
 
-    }
 
-    /**
-     * Checks if the app has permission to write to device storage
-     *
-     * If the app does not has permission then the user will be prompted to
-     * grant permissions
-     *
-     * @param activity
-     */
-    public static void verifyStoragePermissions(Activity activity) {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(activity,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                    // permission was granted, yay! Do the
-                    // contacts-related task you need to do.
-                    //通过时
-                } else {
-
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    //拒绝是处理
-                }
-                return;
-            }
-
-            // other 'case' lines to check for other
-            // permissions this app might request
-        }
     }
 
 
@@ -430,7 +380,7 @@ public class PublishActivity extends AppCompatActivity {
 
     private void postDataToServer() {
         mUrl = GlobalConstants.INFO_NEW_URL;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NTU1MTgyLCJleHAiOjE1MTQ1NTg3ODIsIm5iZiI6MTUxNDU1NTE4MiwianRpIjoiaFpXNGdPbUJmMVBEWUtkYSIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.NeelWC-uZF8__9fgyd6RoL-n4XrCSOelR7wVzZ5Mb5E";
 //        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
 //        token = refreshTokenUtils.refreshToken(this);
         mUrl = mUrl + "?token=" + token;
@@ -478,7 +428,7 @@ public class PublishActivity extends AppCompatActivity {
         picUrl = GlobalConstants.PICS_UPLOAD_URL;
 //        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
 //        token = refreshTokenUtils.refreshToken(this);
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NTU1MTgyLCJleHAiOjE1MTQ1NTg3ODIsIm5iZiI6MTUxNDU1NTE4MiwianRpIjoiaFpXNGdPbUJmMVBEWUtkYSIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.NeelWC-uZF8__9fgyd6RoL-n4XrCSOelR7wVzZ5Mb5E";
         picUrl = picUrl + "?token=" + token;
         RequestParams params = new RequestParams(picUrl);
         List<KeyValue> list = new ArrayList<KeyValue>();

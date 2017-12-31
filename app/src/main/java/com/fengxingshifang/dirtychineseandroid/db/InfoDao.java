@@ -47,8 +47,8 @@ public class InfoDao {
                 Info.setTitle(cursor.getString(cursor.getColumnIndex("title")));
                 Info.setDigest(cursor.getString(cursor.getColumnIndex("digest")));
                 Info.setContent(cursor.getString(cursor.getColumnIndex("content")));
-                Info.setFatherinfoid(cursor.getString(cursor.getColumnIndex("fatherinfoid")));
-                Info.setFathertitle(cursor.getString(cursor.getColumnIndex("fathertitle")));
+                Info.setParentinfoid(cursor.getString(cursor.getColumnIndex("parentinfoid")));
+                Info.setParenttitle(cursor.getString(cursor.getColumnIndex("parenttitle")));
                 Info.setCreatetime(cursor.getString(cursor.getColumnIndex("createtime")));
                 Info.setLastupdatetime(cursor.getString(cursor.getColumnIndex("lastupdatetime")));
                 InfoList.add(Info);
@@ -84,8 +84,8 @@ public class InfoDao {
                 Info.setTitle(cursor.getString(cursor.getColumnIndex("title")));
                 Info.setDigest(cursor.getString(cursor.getColumnIndex("digest")));
                 Info.setContent(cursor.getString(cursor.getColumnIndex("content")));
-                Info.setFatherinfoid(cursor.getString(cursor.getColumnIndex("fatherinfoid")));
-                Info.setFathertitle(cursor.getString(cursor.getColumnIndex("fathertitle")));
+                Info.setParentinfoid(cursor.getString(cursor.getColumnIndex("parentinfoid")));
+                Info.setParenttitle(cursor.getString(cursor.getColumnIndex("parenttitle")));
                 Info.setCreatetime(cursor.getString(cursor.getColumnIndex("createtime")));
                 Info.setLastupdatetime(cursor.getString(cursor.getColumnIndex("lastupdatetime")));
             }
@@ -108,7 +108,7 @@ public class InfoDao {
      */
     public long insertInfo(Info Info) {
         SQLiteDatabase db = helper.getWritableDatabase();
-        String sql = "insert into db_Info(infoid,title,content,fatherinfoid,fathertitle," +
+        String sql = "insert into db_Info(infoid,title,content,parentinfoid,parenttitle," +
                 "createtime,lastupdatetime) " +
                 "values(?,?,?,?,?,?,?)";
 
@@ -120,8 +120,8 @@ public class InfoDao {
             stat.bindString(1, Info.getInfoid());
             stat.bindString(2, Info.getTitle());
             stat.bindString(3, Info.getContent());
-            stat.bindString(4, Info.getFatherinfoid());
-            stat.bindString(5, Info.getFathertitle());
+            stat.bindString(4, Info.getParentinfoid());
+            stat.bindString(5, Info.getParenttitle());
             stat.bindString(6, DateUtils.date2string(new Date()));
             stat.bindString(7, DateUtils.date2string(new Date()));
             ret = stat.executeInsert();

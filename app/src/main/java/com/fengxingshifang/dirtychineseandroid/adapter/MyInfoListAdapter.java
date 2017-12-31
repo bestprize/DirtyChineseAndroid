@@ -1,18 +1,27 @@
 package com.fengxingshifang.dirtychineseandroid.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fengxingshifang.dirtychineseandroid.R;
 import com.fengxingshifang.dirtychineseandroid.domain.InfoListData.Info;
+import com.fengxingshifang.dirtychineseandroid.utils.SDCardUtil;
+import com.fengxingshifang.dirtychineseandroid.utils.StringUtils;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.R.attr.path;
 
 /**
  * Created by git on 2017/12/5.
@@ -24,6 +33,7 @@ public class MyInfoListAdapter extends RecyclerView.Adapter<MyInfoListAdapter.Vi
     private List<Info> mInfos;
     private OnRecyclerViewItemClickListener mOnItemClickListener ;
     private OnRecyclerViewItemLongClickListener mOnItemLongClickListener ;
+    private boolean havePic;
 
     public MyInfoListAdapter() {
         mInfos = new ArrayList<>();
@@ -71,7 +81,7 @@ public class MyInfoListAdapter extends RecyclerView.Adapter<MyInfoListAdapter.Vi
         //Log.i(TAG, "###onCreateViewHolder: ");
         //inflate(R.layout.list_item_record,parent,false) 如果不这么写，cardview不能适应宽度
         mContext = parent.getContext();
-        View view = LayoutInflater.from(mContext).inflate(R.layout.list_item_info,parent,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.list_item_info, parent, false);
         //将创建的View注册点击事件
         view.setOnClickListener(this);
         view.setOnLongClickListener(this);
@@ -86,7 +96,36 @@ public class MyInfoListAdapter extends RecyclerView.Adapter<MyInfoListAdapter.Vi
         holder.itemView.setTag(Info);
         //Log.e("adapter", "###record="+record);
         holder.tv_list_title.setText(Info.getTitle());
-        holder.tv_list_summary.setText(Info.getContent());
+
+        List<String> textList = StringUtils.cutStringByImgTag(Info.getContent());
+//        String contentNoPics = "";
+        havePic = false;
+        for (int i = 0; i < textList.size(); i++) {
+            String text = textList.get(i);
+            if (text.contains("<img") && text.contains("src=")) {
+                String imagePath = StringUtils.getImgSrc(text);
+//                    if (new File(imagePath).exists()) {
+                String localImagePath = SDCardUtil.getPictureDirServer("") + imagePath;
+                Log.e("","localImagePath-----------------------88888881----------------------------:"+SDCardUtil.SDCardRoot + "DIRTYCHINESE" + imagePath);
+                if (new File(localImagePath).exists()) {
+                    Log.e("","localImagePath-----------------------88888882----------------------------:"+SDCardUtil.SDCardRoot + "DIRTYCHINESE" + imagePath);
+                    Bitmap bmp = BitmapFactory.decodeFile(localImagePath, null);
+                    holder.tv_list_image.setImageBitmap(bmp);
+                } else {
+                }
+                havePic = true;
+                break;
+            } else {
+//                contentNoPics = text;
+                holder.tv_list_summary_text.setText(text);
+            }
+        }
+        if(!havePic){
+            holder.tv_list_image.setVisibility(View.GONE);
+        }
+
+//        holder.tv_list_summary_text.setText(Info.getContent());
+//        holder.tv_list_summary2.setText(Info.getContent());
         holder.tv_list_time.setText(Info.getCreatetime());
     }
 
@@ -102,18 +141,24 @@ public class MyInfoListAdapter extends RecyclerView.Adapter<MyInfoListAdapter.Vi
     //自定义的ViewHolder，持有每个Item的的所有界面元素
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tv_list_title;//笔记标题
-        public TextView tv_list_summary;//笔记摘要
+        public TextView tv_list_summary_text;//笔记摘要
+//        public TextView tv_list_summary2;//笔记摘要
         public TextView tv_list_time;//创建时间
         public TextView tv_list_group;//笔记分类
         public CardView card_view_info;
+        public ImageView tv_list_image;
 
         public ViewHolder(View view){
             super(view);
             card_view_info = (CardView) view.findViewById(R.id.card_view_info);
             tv_list_title = (TextView) view.findViewById(R.id.tv_list_title);
-            tv_list_summary = (TextView) view.findViewById(R.id.tv_list_summary);
+            tv_list_summary_text = (TextView) view.findViewById(R.id.tv_list_summary_text);
+//            tv_list_summary2 = (TextView) view.findViewById(R.id.tv_list_summary2);
             tv_list_time = (TextView) view.findViewById(R.id.tv_list_time);
             tv_list_group = (TextView) view.findViewById(R.id.tv_list_group);
+
+            tv_list_image = (ImageView) view.findViewById(R.id.tv_list_image);
+
         }
     }
 }

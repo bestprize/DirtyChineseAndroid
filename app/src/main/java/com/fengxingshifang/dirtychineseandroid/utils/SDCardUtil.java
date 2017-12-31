@@ -34,16 +34,29 @@ public class SDCardUtil {
     }
 
     /**
-     * 获得文章图片保存路径
+     * 获得文章图片保存路径--local操作
      * @return
      */
     public static String getPictureDir(){
-        String imageCacheUrl = SDCardRoot + "XRichText" + File.separator;
+        String imageCacheUrl = SDCardRoot + "DIRTYCHINESE" + File.separator;
         File file = new File(imageCacheUrl);
         if(!file.exists())
             file.mkdir();  //如果不存在则创建
         return imageCacheUrl;
     }
+
+    /**
+     * 获得文章图片保存路径--server操作
+     * @return
+     */
+    public static String getPictureDirServer(String picPath){
+        String imageCacheUrl = SDCardRoot + "DIRTYCHINESE" + File.separator + picPath;
+        File file = new File(imageCacheUrl);
+        if(!file.exists())
+            file.mkdir();  //如果不存在则创建
+        return imageCacheUrl;
+    }
+
 
     /**
      * 图片保存到SD卡

@@ -1,6 +1,7 @@
 package com.fengxingshifang.dirtychineseandroid;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -18,8 +19,10 @@ import android.widget.Toast;
 
 import com.fengxingshifang.dirtychineseandroid.adapter.MyInfoListAdapter;
 import com.fengxingshifang.dirtychineseandroid.db.InfoDao;
+import com.fengxingshifang.dirtychineseandroid.domain.DUser;
 import com.fengxingshifang.dirtychineseandroid.domain.InfoListData;
 import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
+import com.fengxingshifang.dirtychineseandroid.utils.PrefUtils;
 import com.fengxingshifang.dirtychineseandroid.utils.RefreshTokenUtils;
 import com.fengxingshifang.dirtychineseandroid.utils.SDCardUtil;
 import com.fengxingshifang.dirtychineseandroid.utils.SpacesItemDecoration;
@@ -79,6 +82,9 @@ public class InfoActivity extends AppCompatActivity {
     private ProgressDialog loadingDialog;
     private Subscription subsLoading;
     private EditText info_publish_comment_area;
+    private boolean isInfoAddOrComment;
+    private String myPublisher;
+    private DUser userInfo;
 
 
 
@@ -112,6 +118,7 @@ public class InfoActivity extends AppCompatActivity {
         //点击评论区域动作
         info_publish_comment_area = (EditText) findViewById(R.id.info_publish_comment_area);
         info_publish_comment_area.setFocusable(false);
+        Log.e("","isInfoAddOrComment-------------------------------33333333--------------------:"+Boolean.toString(isInfoAddOrComment));
         info_publish_comment_area.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -119,6 +126,7 @@ public class InfoActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), PublishcommentActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("info", info);
+                bundle.putSerializable("isInfoAddOrComment", isInfoAddOrComment);
                 intent.putExtra("data", bundle);
                 startActivity(intent);
             }
@@ -182,8 +190,32 @@ public class InfoActivity extends AppCompatActivity {
 
         myTitle = info.getTitle();
         myContent = info.getContent();
-
+        myPublisher = info.getPublisher();
+        Log.e("","myPublisher-----------------------11111111111111----------------------------:"+myPublisher);
         tv_info_title.setText(myTitle);
+
+        ;
+        //下载图片至本地，并改写myContent中图片路径至myLocalContent
+        List<String> textList = StringUtils.cutStringByImgTag(myContent);
+        for (int i = 0; i < textList.size(); i++) {
+            String text = textList.get(i);
+            if (text.contains("<img") && text.contains("src=")) {
+                String imagePath = StringUtils.getImgSrc(text);
+                String serverImagePath = GlobalConstants.UPLOAD_PICS_URL + imagePath;
+                String[] stringTmp = imagePath.split("/");
+//                String imagePathTmp = stringTmp[1];
+                String localImagePath = SDCardUtil.getPictureDirServer(stringTmp[1]) + File.separator + stringTmp[2];
+//                String localImagePath = SDCardUtil.SDCardRoot + "DIRTYCHINESE" + File.separator + imagePath;
+                Log.e("","serverImagePath-----------------------999999----------------------------:"+serverImagePath);
+                Log.e("","localImagePath-----------------------999999----------------------------:"+localImagePath);
+                downloadInfoPicFromServer(serverImagePath,localImagePath);
+            } else {
+
+            }
+        }
+//        downloadInfoPicFromServer();
+
+
         tv_info_content.post(new Runnable() {
             @Override
             public void run() {
@@ -198,16 +230,19 @@ public class InfoActivity extends AppCompatActivity {
         //获取comment数据并显示
         getCommentDataFromServer();
 
+        getUserInfo(this);
+        Log.e("","isInfoAddOrComment---------------------22222222222222------------------------------:"+Boolean.toString(isInfoAddOrComment));
+
 
     }
 
 
     private void getInfoDataFromServer() {
         mUrlInfo = GlobalConstants.INFO_VIEW_URL;
-        mUrlInfo = mUrlInfo + myInfoid + "/" + "1" + "/" + "c2487210deeb11e799aadf3977c20922/\"\"";
-//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzODI0OTc1LCJleHAiOjE1MTM4Mjg1NzUsIm5iZiI6MTUxMzgyNDk3NSwianRpIjoic3QxVU1UanhBYjU2YzlXayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MZsVbswTc_sAwoKfc6FacMhd3HPAltSzwD0YttvwfU8";
-        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
-        token = refreshTokenUtils.refreshToken(this);
+        mUrlInfo = mUrlInfo + myInfoid + "/" + "1" + "/" + "a2bdb0a0e7d611e78b31cf65557997fb/\"\"";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
+//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+//        token = refreshTokenUtils.refreshToken(this);
         mUrlInfo = mUrlInfo + "?token=" + token;
         RequestParams params = new RequestParams(mUrlInfo);
         params.addQueryStringParameter("wd","xUtils");
@@ -257,9 +292,9 @@ public class InfoActivity extends AppCompatActivity {
     private void getCommentDataFromServer() {
         mUrlListComment = GlobalConstants.COMMENT_LIST_URL;
         mUrlListComment = mUrlListComment + myInfoid;
-//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTEzODI0OTc1LCJleHAiOjE1MTM4Mjg1NzUsIm5iZiI6MTUxMzgyNDk3NSwianRpIjoic3QxVU1UanhBYjU2YzlXayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.MZsVbswTc_sAwoKfc6FacMhd3HPAltSzwD0YttvwfU8";
-        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
-        token = refreshTokenUtils.refreshToken(this);
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
+//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+//        token = refreshTokenUtils.refreshToken(this);
         mUrlListComment = mUrlListComment + "?token=" + token;
         RequestParams params = new RequestParams(mUrlListComment);
         params.addQueryStringParameter("wd","xUtils");
@@ -307,7 +342,50 @@ public class InfoActivity extends AppCompatActivity {
 
     }
 
+    private void downloadInfoPicFromServer(final String url, String path) {
+//        progressDialog = new ProgressDialog(this);
+        RequestParams requestParams = new RequestParams(url);
+        requestParams.setSaveFilePath(path);
+        x.http().get(requestParams, new Callback.ProgressCallback<File>() {
+            @Override
+            public void onWaiting() {
+            }
 
+            @Override
+            public void onStarted() {
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+//                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//                progressDialog.setMessage("亲，努力下载中。。。");
+//                progressDialog.show();
+//                progressDialog.setMax((int) total);
+//                progressDialog.setProgress((int) current);
+            }
+
+            @Override
+            public void onSuccess(File result) {
+                Toast.makeText(InfoActivity.this, "下载成功", Toast.LENGTH_SHORT).show();
+//                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Toast.makeText(InfoActivity.this, "下载失败，请检查网络和SD卡", Toast.LENGTH_SHORT).show();
+//                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
 
 
 
@@ -352,7 +430,7 @@ public class InfoActivity extends AppCompatActivity {
 
     }
 
-    /**
+    /**SDCardUtil.SDCardRoot + "XRichText" + File.separator
      * 显示数据
      * @param html
      */
@@ -363,8 +441,12 @@ public class InfoActivity extends AppCompatActivity {
                 String text = textList.get(i);
                 if (text.contains("<img") && text.contains("src=")) {
                     String imagePath = StringUtils.getImgSrc(text);
-                    if (new File(imagePath).exists()) {
-                        subscriber.onNext(imagePath);
+//                    if (new File(imagePath).exists()) {
+                    String localImagePath = SDCardUtil.getPictureDirServer("") + imagePath;
+                    Log.e("","localImagePath-----------------------88888881----------------------------:"+SDCardUtil.SDCardRoot + "DIRTYCHINESE" + imagePath);
+                    if (new File(localImagePath).exists()) {
+                        Log.e("","localImagePath-----------------------88888882----------------------------:"+SDCardUtil.SDCardRoot + "DIRTYCHINESE" + imagePath);
+                        subscriber.onNext(localImagePath);
                     } else {
                         showToast("图片"+1+"已丢失，请重新插入！");
                     }
@@ -447,6 +529,55 @@ public class InfoActivity extends AppCompatActivity {
 
         finish();
     }
+
+
+    private void getUserInfo(Context ctx) {
+        //获取token
+        String token = PrefUtils.getString(ctx, "token", null);
+        String getUserUrl = GlobalConstants.GET_USER_URL;
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
+        getUserUrl = getUserUrl + "?token=" + token;
+
+//        Log.e("TAG1111----------------", jsonStringInfo);
+        RequestParams params = new RequestParams(getUserUrl);
+        params.addQueryStringParameter("wd","xUtils");
+        x.http().get(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Gson gson=new Gson();
+                userInfo = gson.fromJson(result, DUser.class);
+                Log.e("","myPublisher------------------------------000000000---------------------:"+myPublisher);
+                Log.e("","userInfo.getUser().getUserid()-----------------------00000000000----------------------------:"+userInfo.getUser().getUserid());
+                if(myPublisher.equals(userInfo.getUser().getUserid())){
+                    isInfoAddOrComment = true;
+                } else {
+                    isInfoAddOrComment = false;
+                }
+                Log.e("TAG", "xUtis3联网请求success==");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
+    }
+
 
     public void showToast(String text) {
         Toast.makeText(this, text, Toast.LENGTH_SHORT).show();

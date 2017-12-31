@@ -47,8 +47,8 @@ public class InfoListData {
         private String content;
         private String publisher;
         private String phoneid;
-        private String fatherinfoid;
-        private String fathertitle;
+        private String parentinfoid;
+        private String parenttitle;
         private String createtime;
         private String lastupdatetime;
         private int browsecount;
@@ -116,20 +116,20 @@ public class InfoListData {
             this.phoneid = phoneid;
         }
 
-        public String getFatherinfoid() {
-            return fatherinfoid;
+        public String getParentinfoid() {
+            return parentinfoid;
         }
 
-        public void setFatherinfoid(String fatherinfoid) {
-            this.fatherinfoid = fatherinfoid;
+        public void setParentinfoid(String parentinfoid) {
+            this.parentinfoid = parentinfoid;
         }
 
-        public String getFathertitle() {
-            return fathertitle;
+        public String getParenttitle() {
+            return parenttitle;
         }
 
-        public void setFathertitle(String fathertitle) {
-            this.fathertitle = fathertitle;
+        public void setParenttitle(String parenttitle) {
+            this.parenttitle = parenttitle;
         }
 
         public String getCreatetime() {

@@ -67,18 +67,17 @@ public class PublishcommentActivity extends AppCompatActivity {
     private Subscription subsLoading;
     private Subscription subsInsert;
     private InfoDao infoDao;
-    private InfoListData.Info fatherinfo;
+    private InfoListData.Info parentinfo;
     private InfoListData.Info info;
-    private String fatherInfoid;
-    private String fatherTitle;
-    private String fatherPublisher;
+    private String parentInfoid;
+    private String parentTitle;
+    private String parentPublisher;
     private String infoId;
     private String mUrl;
     private String token;
     private String jsonStringInfo;
     private String picUrl;
     private boolean isInfoAddOrComment;
-    private DUser userInfo;
 
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
@@ -115,10 +114,12 @@ public class PublishcommentActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("data");
-        fatherinfo = (InfoListData.Info) bundle.getSerializable("info");
-        fatherInfoid = fatherinfo.getInfoid();
-        fatherTitle = fatherinfo.getTitle();
-        fatherPublisher = fatherinfo.getPublisher();
+        parentinfo = (InfoListData.Info) bundle.getSerializable("info");
+        isInfoAddOrComment = (boolean) bundle.getSerializable("isInfoAddOrComment");
+        Log.e("","isInfoAddOrComment---------------------------------------------------:"+Boolean.toString(isInfoAddOrComment));
+        parentInfoid = parentinfo.getInfoid();
+        parentTitle = parentinfo.getTitle();
+
 
 //        et_comment_new_title = (EditText) findViewById(R.id.et_comment_new_title);
         et_comment_new_content = (RichTextEditor) findViewById(R.id.et_comment_new_content);
@@ -139,7 +140,6 @@ public class PublishcommentActivity extends AppCompatActivity {
 
         verifyStoragePermissions(this);
 
-        getUserInfo(this);
 
 
     }
@@ -249,8 +249,8 @@ public class PublishcommentActivity extends AppCompatActivity {
 //            }
 //        }
 //        info.setTitle(title);
-        info.setFatherinfoid(fatherInfoid);
-        info.setFathertitle(fatherTitle);
+        info.setParentinfoid(parentInfoid);
+        info.setParenttitle(parentTitle);
         info.setContent(content);
 //        flag = 0;
 //        if (flag == 0 ) {//新建笔记
@@ -453,7 +453,7 @@ public class PublishcommentActivity extends AppCompatActivity {
             //comment
             mUrl = GlobalConstants.INFO_COMMENT_NEW_URL;
         }
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NjI0MDcxLCJleHAiOjE1MTQ2Mjc2NzEsIm5iZiI6MTUxNDYyNDA3MSwianRpIjoiMmdRQTdNOW4wTHhIalNvYiIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.NzNRQ8LKihLT2XCG-hJYjhmBaijOXiAyZyR5cKpo9qQ";
 //        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
 //        token = refreshTokenUtils.refreshToken(this);
         mUrl = mUrl + "?token=" + token;
@@ -501,7 +501,7 @@ public class PublishcommentActivity extends AppCompatActivity {
         picUrl = GlobalConstants.PICS_UPLOAD_URL;
 //        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
 //        token = refreshTokenUtils.refreshToken(this);
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NjI0MDcxLCJleHAiOjE1MTQ2Mjc2NzEsIm5iZiI6MTUxNDYyNDA3MSwianRpIjoiMmdRQTdNOW4wTHhIalNvYiIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.NzNRQ8LKihLT2XCG-hJYjhmBaijOXiAyZyR5cKpo9qQ";
         picUrl = picUrl + "?token=" + token;
         RequestParams params = new RequestParams(picUrl);
         List<KeyValue> list = new ArrayList<KeyValue>();
@@ -617,51 +617,6 @@ public class PublishcommentActivity extends AppCompatActivity {
     }
 
 
-    private void getUserInfo(Context ctx) {
-        //获取token
-        String token = PrefUtils.getString(ctx, "token", null);
-        String getUserUrl = GlobalConstants.GET_USER_URL;
-//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
-        getUserUrl = getUserUrl + "?token=" + token;
 
-        Log.e("TAG1111----------------", jsonStringInfo);
-        RequestParams params = new RequestParams(getUserUrl);
-        params.setAsJsonContent(true);
-        params.setBodyContent(jsonStringInfo);
-        params.addQueryStringParameter("wd","xUtils");
-        x.http().post(params, new Callback.CommonCallback<String>() {
-            @Override
-            public void onSuccess(String result) {
-                Gson gson=new Gson();
-                userInfo = gson.fromJson(result, DUser.class);
-                if(fatherPublisher.equals(userInfo.getUser().getUserid())){
-                    isInfoAddOrComment = true;
-                } else {
-                    isInfoAddOrComment = false;
-                }
-                Log.e("TAG", "xUtis3联网请求success==");
-
-            }
-
-            @Override
-            public void onError(Throwable ex, boolean isOnCallback) {
-                ex.printStackTrace();
-                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
-
-
-            }
-
-            @Override
-            public void onCancelled(CancelledException cex) {
-                Log.e("TAG", "onCancelled==" + cex.getMessage());
-            }
-
-            @Override
-            public void onFinished() {
-                Log.e("TAG","onFinished==");
-            }
-
-        });
-    }
 
 }

@@ -19,7 +19,9 @@ import com.fengxingshifang.dirtychineseandroid.domain.InfoListData;
 import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
 import com.fengxingshifang.dirtychineseandroid.utils.CacheUtils;
 import com.fengxingshifang.dirtychineseandroid.utils.RefreshTokenUtils;
+import com.fengxingshifang.dirtychineseandroid.utils.SDCardUtil;
 import com.fengxingshifang.dirtychineseandroid.utils.SpacesItemDecoration;
+import com.fengxingshifang.dirtychineseandroid.utils.StringUtils;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -31,6 +33,7 @@ import org.xutils.common.Callback;
 import org.xutils.http.RequestParams;
 import org.xutils.x;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,7 +113,7 @@ public class HomeFragment extends BaseFragment {
     private void getDataFromServer() {
         mUrl = GlobalConstants.HOME_LIST_URL;
         mUrl = mUrl + "01/" + String.valueOf(nowPage) + "/" + GlobalConstants.numberPerPage;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0MTcwMDQ0LCJleHAiOjE1MTQxNzM2NDQsIm5iZiI6MTUxNDE3MDA0NCwianRpIjoiUDlGZkNyaUpSNDJ1WVdqayIsInN1YiI6MCwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.kIVT8EsfZpTV7oZNAmtGlGnRcZ0r2vskEz5-680UMSA";
+        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
 //        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
 //        token = refreshTokenUtils.refreshToken(mContext);
         mUrl = mUrl + "?token=" + token;
@@ -151,14 +154,85 @@ public class HomeFragment extends BaseFragment {
         JsonParser parser = new JsonParser();
         JsonArray jsonArrayResult = parser.parse(result).getAsJsonArray();
 
+        //同时下载第一张图片至sdcard
         for(JsonElement infoTmp:jsonArrayResult){
             info = gson.fromJson(infoTmp, InfoListData.Info.class);
+            List<String> textList = StringUtils.cutStringByImgTag(info.getContent());
+            for (int i = 0; i < textList.size(); i++) {
+                String text = textList.get(i);
+                if (text.contains("<img") && text.contains("src=")) {
+                    String imagePath = StringUtils.getImgSrc(text);
+                    String serverImagePath = GlobalConstants.UPLOAD_PICS_URL + imagePath;
+                    String[] stringTmp = imagePath.split("/");
+//                String imagePathTmp = stringTmp[1];
+                    String localImagePath = SDCardUtil.getPictureDirServer(stringTmp[1]) + File.separator + stringTmp[2];
+//                String localImagePath = SDCardUtil.SDCardRoot + "DIRTYCHINESE" + File.separator + imagePath;
+                    Log.e("","serverImagePath-----------------------999999----------------------------:"+serverImagePath);
+                    Log.e("","localImagePath-----------------------999999----------------------------:"+localImagePath);
+                    downloadInfoPicFromServer(serverImagePath,localImagePath);
+//                    havePic = true;
+                    break;
+                } else {
+
+                }
+            }
             listInfo.add(info);
         }
+
+
+
         mInfoListAdapter.setmInfos(listInfo);
         mInfoListAdapter.notifyDataSetChanged();
 
     }
+
+    private void downloadInfoPicFromServer(final String url, String path) {
+//        progressDialog = new ProgressDialog(this);
+        RequestParams requestParams = new RequestParams(url);
+        requestParams.setSaveFilePath(path);
+        x.http().get(requestParams, new Callback.ProgressCallback<File>() {
+            @Override
+            public void onWaiting() {
+            }
+
+            @Override
+            public void onStarted() {
+            }
+
+            @Override
+            public void onLoading(long total, long current, boolean isDownloading) {
+//                progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//                progressDialog.setMessage("亲，努力下载中。。。");
+//                progressDialog.show();
+//                progressDialog.setMax((int) total);
+//                progressDialog.setProgress((int) current);
+            }
+
+            @Override
+            public void onSuccess(File result) {
+                Toast.makeText(mContext, "下载成功", Toast.LENGTH_SHORT).show();
+//                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Toast.makeText(mContext, "下载失败，请检查网络和SD卡", Toast.LENGTH_SHORT).show();
+//                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+            }
+
+            @Override
+            public void onFinished() {
+            }
+        });
+    }
+
+
+
 
 
     /** 上拉加载和下拉刷新事件 **/
