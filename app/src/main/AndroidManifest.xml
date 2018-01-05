@@ -40,6 +40,22 @@
         <activity
             android:name="me.iwf.photopicker.PhotoPagerActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <!-- 注册SDKActivity -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="tencent1106574339" /> <!-- 开放平台获取的APPID -->
+            </intent-filter>
+        </activity>
+        <activity android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
