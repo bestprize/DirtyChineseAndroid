@@ -8,6 +8,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fengxingshifang.dirtychineseandroid.domain.RegisterFlag;
+import com.fengxingshifang.dirtychineseandroid.domain.Token;
+import com.fengxingshifang.dirtychineseandroid.domain.UserRorL;
+import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
+import com.google.gson.Gson;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
 import com.tencent.connect.common.Constants;
@@ -17,6 +22,9 @@ import com.tencent.tauth.UiError;
 
 import org.json.JSONObject;
 import org.json.JSONException;
+import org.xutils.common.Callback;
+import org.xutils.http.RequestParams;
+import org.xutils.x;
 
 /**
  * Created by git on 2017/12/7.
@@ -30,6 +38,10 @@ public class LoginActivity extends AppCompatActivity {
     private BaseUiListener mIUiListener;
     private UserInfo mUserInfo;
     private Button btnQQLogin;
+    private String isregister;
+    private String mUrl;
+    private String jsonStringResponse;
+    private UserRorL userRorL;
 
 
     @Override
@@ -39,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         //传入参数APPID和全局Context上下文
         mTencent = Tencent.createInstance(APP_ID, LoginActivity.this.getApplicationContext());
+        userRorL = new UserRorL();
         btnQQLogin = (Button) findViewById(R.id.btn_login_qq);
         btnQQLogin.setOnClickListener(new View.OnClickListener() {
 
@@ -73,6 +86,28 @@ public class LoginActivity extends AppCompatActivity {
                 String openID = obj.getString("openid");
                 String accessToken = obj.getString("access_token");
                 String expires = obj.getString("expires_in");
+                //判断openid在user表中是否存在，若不存在，则是第一次登录，先注册，再登录；若存在，则已注册，直接登录
+                //判断openid在user表中是否存在
+
+                userRorL.setRegisterstyle("qq");
+                userRorL.setThirdpartyid(openID);
+                isRegister(userRorL);
+
+                //若不存在，注册
+//                if("0".equals(isregister)){
+//                    userRegister(userRorL);
+//                } else {
+//                    //若存在，登录
+//                    userLogin(userRorL);
+//                }
+
+
+
+
+
+
+
+
                 mTencent.setOpenId(openID);
                 mTencent.setAccessToken(accessToken, expires);
                 QQToken qqToken = mTencent.getQQToken();
@@ -130,6 +165,136 @@ public class LoginActivity extends AppCompatActivity {
             Tencent.onActivityResultData(requestCode, resultCode, data, mIUiListener);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    private void isRegister(final UserRorL userRorL) {
+        Toast.makeText(LoginActivity.this, "开始判断是否已注册", Toast.LENGTH_SHORT).show();
+        mUrl = GlobalConstants.USER_IS_REGISTER;
+        Gson gson=new Gson();
+        jsonStringResponse = gson.toJson(userRorL);
+        Log.e("TAG1111----------------", jsonStringResponse);
+        RequestParams params = new RequestParams(mUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(jsonStringResponse);
+        params.addQueryStringParameter("wd","xUtils");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Toast.makeText(LoginActivity.this, "判断是否已注册服务器返回", Toast.LENGTH_SHORT).show();
+                Gson gson = new Gson();
+                isregister = gson.fromJson(result, RegisterFlag.class).getIsRegisterFlag();
+                //若不存在，注册
+                if("0".equals(isregister)){
+                    Toast.makeText(LoginActivity.this, "判断出未注册", Toast.LENGTH_SHORT).show();
+                    userRegister(userRorL);
+                } else {
+                    //若存在，登录
+                    Toast.makeText(LoginActivity.this, "判断出已注册", Toast.LENGTH_SHORT).show();
+                    userLogin(userRorL);
+                }
+                Log.e("TAG", "xUtis3联网请求success==");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
+    }
+
+
+    private void userRegister(final UserRorL userRorL) {
+        Toast.makeText(LoginActivity.this, "开始注册", Toast.LENGTH_SHORT).show();
+        mUrl = GlobalConstants.USER_REGISTER;
+        Gson gson=new Gson();
+        jsonStringResponse = gson.toJson(userRorL);
+        Log.e("TAG1111----------------", jsonStringResponse);
+        RequestParams params = new RequestParams(mUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(jsonStringResponse);
+        params.addQueryStringParameter("wd","xUtils");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                //若注册成功，登录
+                userLogin(userRorL);
+                Log.e("TAG", "xUtis3联网请求success==");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
+    }
+
+    private void userLogin(UserRorL userRorL) {
+        Toast.makeText(LoginActivity.this, "开始登录", Toast.LENGTH_SHORT).show();
+        mUrl = GlobalConstants.USER_LOGIN;
+        Gson gson=new Gson();
+        jsonStringResponse = gson.toJson(userRorL);
+        Log.e("TAG1111----------------", jsonStringResponse);
+        RequestParams params = new RequestParams(mUrl);
+        params.setAsJsonContent(true);
+        params.setBodyContent(jsonStringResponse);
+        params.addQueryStringParameter("wd","xUtils");
+        x.http().post(params, new Callback.CommonCallback<String>() {
+            @Override
+            public void onSuccess(String result) {
+                Log.e("TAG", "xUtis3联网请求success==");
+
+            }
+
+            @Override
+            public void onError(Throwable ex, boolean isOnCallback) {
+                ex.printStackTrace();
+                Log.e("TAG", "xUtis3联网请求失败==" + ex.getMessage());
+
+
+            }
+
+            @Override
+            public void onCancelled(CancelledException cex) {
+                Log.e("TAG", "onCancelled==" + cex.getMessage());
+            }
+
+            @Override
+            public void onFinished() {
+                Log.e("TAG","onFinished==");
+            }
+
+        });
     }
 
 

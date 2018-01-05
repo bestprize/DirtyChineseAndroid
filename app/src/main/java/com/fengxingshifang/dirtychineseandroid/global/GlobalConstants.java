@@ -19,6 +19,10 @@ public class GlobalConstants {
 
     public static final String GET_USER_URL = SERVER_URL + "user";
 
+    public static final String USER_IS_REGISTER = SERVER_URL + "isregister";
+    public static final String USER_REGISTER = SERVER_URL + "register";
+    public static final String USER_LOGIN = SERVER_URL + "login";
+
 
     public static final String numberPerPage = "10";
 }
