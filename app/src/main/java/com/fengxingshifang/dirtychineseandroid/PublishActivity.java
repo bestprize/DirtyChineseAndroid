@@ -127,8 +127,11 @@ public class PublishActivity extends AppCompatActivity {
 
 
 
-
     }
+
+
+
+
 
 
     @Override
@@ -380,9 +383,9 @@ public class PublishActivity extends AppCompatActivity {
 
     private void postDataToServer() {
         mUrl = GlobalConstants.INFO_NEW_URL;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NTU1MTgyLCJleHAiOjE1MTQ1NTg3ODIsIm5iZiI6MTUxNDU1NTE4MiwianRpIjoiaFpXNGdPbUJmMVBEWUtkYSIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.NeelWC-uZF8__9fgyd6RoL-n4XrCSOelR7wVzZ5Mb5E";
-//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
-//        token = refreshTokenUtils.refreshToken(this);
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NTU1MTgyLCJleHAiOjE1MTQ1NTg3ODIsIm5iZiI6MTUxNDU1NTE4MiwianRpIjoiaFpXNGdPbUJmMVBEWUtkYSIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.NeelWC-uZF8__9fgyd6RoL-n4XrCSOelR7wVzZ5Mb5E";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(this);
         mUrl = mUrl + "?token=" + token;
         Gson gson=new Gson();
         jsonStringInfo = gson.toJson(info);
@@ -426,9 +429,9 @@ public class PublishActivity extends AppCompatActivity {
      */
     private void postPicsToServer() {
         picUrl = GlobalConstants.PICS_UPLOAD_URL;
-//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
-//        token = refreshTokenUtils.refreshToken(this);
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NTU1MTgyLCJleHAiOjE1MTQ1NTg3ODIsIm5iZiI6MTUxNDU1NTE4MiwianRpIjoiaFpXNGdPbUJmMVBEWUtkYSIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.NeelWC-uZF8__9fgyd6RoL-n4XrCSOelR7wVzZ5Mb5E";
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NTU1MTgyLCJleHAiOjE1MTQ1NTg3ODIsIm5iZiI6MTUxNDU1NTE4MiwianRpIjoiaFpXNGdPbUJmMVBEWUtkYSIsInN1YiI6OTIsInBydiI6Ijg3ZTBhZjFlZjlmZDE1ODEyZmRlYzk3MTUzYTE0ZTBiMDQ3NTQ2YWEifQ.NeelWC-uZF8__9fgyd6RoL-n4XrCSOelR7wVzZ5Mb5E";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(this);
         picUrl = picUrl + "?token=" + token;
         RequestParams params = new RequestParams(picUrl);
         List<KeyValue> list = new ArrayList<KeyValue>();

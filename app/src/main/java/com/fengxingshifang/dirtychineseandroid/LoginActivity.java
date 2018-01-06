@@ -1,5 +1,6 @@
 package com.fengxingshifang.dirtychineseandroid;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.fengxingshifang.dirtychineseandroid.domain.InfoListData;
 import com.fengxingshifang.dirtychineseandroid.domain.RegisterFlag;
 import com.fengxingshifang.dirtychineseandroid.domain.Token;
+import com.fengxingshifang.dirtychineseandroid.domain.Token4LoginRtn;
 import com.fengxingshifang.dirtychineseandroid.domain.UserRorL;
 import com.fengxingshifang.dirtychineseandroid.global.GlobalConstants;
+import com.fengxingshifang.dirtychineseandroid.utils.PrefUtils;
 import com.google.gson.Gson;
 import com.tencent.connect.UserInfo;
 import com.tencent.connect.auth.QQToken;
@@ -42,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
     private String mUrl;
     private String jsonStringResponse;
     private UserRorL userRorL;
+    private Context ctx;
 
 
     @Override
@@ -57,12 +62,12 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                buttonLogin(v);
+                buttonLoginQQ(v);
             }
         });
     }
 
-    public void buttonLogin(View v) {
+    public void buttonLoginQQ(View v) {
         /**通过这句代码，SDK实现了QQ的登录，这个方法有三个参数，第一个参数是context上下文，第二个参数SCOPO 是一个String类型的字符串，表示一些权限
          官方文档中的说明：应用需要获得哪些API的权限，由“，”分隔。例如：SCOPE = “get_user_info,add_t”；所有权限用“all”
          第三个参数，是一个事件监听器，IUiListener接口的实例，这里用的是该接口的实现类 */
@@ -79,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onComplete(Object response) {
+            ctx = getApplicationContext();
             Toast.makeText(LoginActivity.this, "授权成功", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "response:" + response);
             JSONObject obj = (JSONObject) response;
@@ -272,6 +278,11 @@ public class LoginActivity extends AppCompatActivity {
         x.http().post(params, new Callback.CommonCallback<String>() {
             @Override
             public void onSuccess(String result) {
+                //登录成功后的token放入PrefUtils中
+                Gson gson = new Gson();
+                String token4LoginRtn = gson.fromJson(result, Token4LoginRtn.class).getToken();
+                PrefUtils.setString(LoginActivity.this, "token", token4LoginRtn);
+
                 Log.e("TAG", "xUtis3联网请求success==");
 
             }

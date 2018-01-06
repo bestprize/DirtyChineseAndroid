@@ -240,9 +240,9 @@ public class InfoActivity extends AppCompatActivity {
     private void getInfoDataFromServer() {
         mUrlInfo = GlobalConstants.INFO_VIEW_URL;
         mUrlInfo = mUrlInfo + myInfoid + "/" + "1" + "/" + "a2bdb0a0e7d611e78b31cf65557997fb/\"\"";
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
-//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
-//        token = refreshTokenUtils.refreshToken(this);
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(this);
         mUrlInfo = mUrlInfo + "?token=" + token;
         RequestParams params = new RequestParams(mUrlInfo);
         params.addQueryStringParameter("wd","xUtils");
@@ -292,9 +292,9 @@ public class InfoActivity extends AppCompatActivity {
     private void getCommentDataFromServer() {
         mUrlListComment = GlobalConstants.COMMENT_LIST_URL;
         mUrlListComment = mUrlListComment + myInfoid;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
-//        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
-//        token = refreshTokenUtils.refreshToken(this);
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
+        RefreshTokenUtils refreshTokenUtils = new RefreshTokenUtils();
+        token = refreshTokenUtils.refreshToken(this);
         mUrlListComment = mUrlListComment + "?token=" + token;
         RequestParams params = new RequestParams(mUrlListComment);
         params.addQueryStringParameter("wd","xUtils");
@@ -535,7 +535,7 @@ public class InfoActivity extends AppCompatActivity {
         //获取token
         String token = PrefUtils.getString(ctx, "token", null);
         String getUserUrl = GlobalConstants.GET_USER_URL;
-        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
+//        token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0L2RpcnR5Q2hpbmVzZS9wdWJsaWMvYXBpL2xvZ2luIiwiaWF0IjoxNTE0NzI5NDQ2LCJleHAiOjE1MTQ3MzMwNDYsIm5iZiI6MTUxNDcyOTQ0NiwianRpIjoiWlNRT3IzU285MGdqWVJwQyIsInN1YiI6ImEyYmRiMGEwZTdkNjExZTc4YjMxY2Y2NTU1Nzk5N2ZiIiwicHJ2IjoiODdlMGFmMWVmOWZkMTU4MTJmZGVjOTcxNTNhMTRlMGIwNDc1NDZhYSJ9.Z6cBD5tQ1-jpXALR67hNk8zHW6pPyDyL37LxwNP812k";
         getUserUrl = getUserUrl + "?token=" + token;
 
 //        Log.e("TAG1111----------------", jsonStringInfo);
